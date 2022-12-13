@@ -59,7 +59,7 @@ def get_employee(skip: int = 0, limit: int = 100, db: Session = Depends(get_db))
 
 
 @router.put(
-    "/update_employee/{id}", response_model=schemas.ShowEmployeeBase, tags=["employee"]
+    "/update_employee/{id}/{designation_id}", response_model=schemas.ShowEmployeeBase, tags=["employee"]
 )
 def update_employee(
     emp: schemas.EmployeeBase,
