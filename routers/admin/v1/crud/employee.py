@@ -49,6 +49,10 @@ def create_employee(designation_id: str, detail: schemas.EmployeeBase, db: Sessi
 
 def get_employee_id(db: Session, id: str):
     db_detail = get_Detail(db=db, id=id)
+    if db_detail is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="employee not found"
+        )
     return db_detail
 
 
