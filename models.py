@@ -58,4 +58,4 @@ class EmployeeModel(Base):
     updated_at = Column(DateTime, default=datetime.datetime.now)
     is_deleted = Column(Boolean, default=False)
 
-    sub_department = relationship("DesignationModel", backref="employee")
+    designation = relationship("DesignationModel", backref="employee")

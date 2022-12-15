@@ -19,7 +19,7 @@ def create_department(name: schemas.DepartmentBase, db: Session = Depends(get_db
 @router.post("/designation/{department_id}", tags=["designation"])
 def create_designation(
     name: schemas.DesignationBase,
-    department_id: str = Path(min_length=36, max_length=36),
+    department_id: str = Path(..., min_length=36, max_length=36),
     db: Session = Depends(get_db),
 ):
     data = employee.create_designation(department_id=department_id, name=name, db=db)
@@ -33,7 +33,7 @@ def create_designation(
 )
 def create_employee(
     detail: schemas.EmployeeBase,
-    designation_id: str = Path(min_length=36, max_length=36),
+    designation_id: str = Path(..., min_length=36, max_length=36),
     db: Session = Depends(get_db),
 ):
     data = employee.create_employee(designation_id=designation_id, detail=detail, db=db)
@@ -41,10 +41,12 @@ def create_employee(
 
 
 @router.get(
-    "/get_employee/{id}", response_model=schemas.ShowEmployeeBase, tags=["employee"]
+    "/get_employee/{id}",
+    response_model=schemas.ShowEmployeeBase,
+    tags=["employee"],  # response_model=schemas.ShowEmployeeBase
 )
 def get_employee(
-    id: str = Path(min_length=36, max_length=36), db: Session = Depends(get_db)
+    id: str = Path(..., min_length=36, max_length=36), db: Session = Depends(get_db)
 ):
     data = employee.get_employee_id(id=id, db=db)
     return data
@@ -59,25 +61,30 @@ def get_employee(skip: int = 0, limit: int = 100, db: Session = Depends(get_db))
 
 
 @router.put(
-    "/update_employee/{id}/{designation_id}",
+    "/update_employee/{id}",
     response_model=schemas.ShowEmployeeBase,
     tags=["employee"],
 )
 def update_employee(
-    emp: schemas.EmployeeBase,
-    designation_id: str = Path(min_length=36, max_length=36),
-    id: str = Path(min_length=36, max_length=36),
+    emp: schemas.UpdateEmpBase,
+    id: str = Path(..., min_length=36, max_length=36),
     db: Session = Depends(get_db),
 ):
-    data = employee.update_employee(
-        emp=emp, designation_id=designation_id, id=id, db=db
-    )
+    data = employee.update_employee(emp=emp, id=id, db=db)
     return data
 
 
 @router.delete("/delete_employee/{id}", tags=["employee"])
 def delete_employee(
-    id: str = Path(min_length=36, max_length=36), db: Session = Depends(get_db)
+    id: str = Path(..., min_length=36, max_length=36), db: Session = Depends(get_db)
 ):
     data = employee.delete_employee(id=id, db=db)
+    return data
+
+
+@router.delete("/delete/{id}", tags=["employee"])
+def delete_emp(
+    id: str = Path(..., min_length=36, max_length=36), db: Session = Depends(get_db)
+):
+    data = employee.delete_emp(id=id, db=db)
     return data
